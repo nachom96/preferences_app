@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:preferences_app/providers/theme_provider.dart';
+import 'package:preferences_app/shared_preferences/preferences.dart';
 import 'package:preferences_app/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   static const String routerName = 'Settings';
@@ -12,9 +15,9 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
 
-  bool isDarkmode = false;
-  int gender = 1;
-  String name = 'Guille';
+  // bool isDarkmode = false;
+  // int gender = 1;
+  // String name = 'Guille';
 
   @override
   Widget build(BuildContext context) {
@@ -34,39 +37,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 'Ajustes',
                 style: TextStyle(fontSize: 45, fontWeight: FontWeight.w300),
               ),
-              Divider(),
+              const Divider(),
               SwitchListTile.adaptive(
-                  value: isDarkmode,
+                  value: Preferences.isDarkMode,
                   title: const Text('Darkmode'),
                   onChanged: (value) {
-                    isDarkmode = value;
+                    Preferences.isDarkMode = value;
+                    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+                    value ? themeProvider.setDarkMode() : themeProvider.setLightMode(); 
                     setState(() {});
                   }),
-              Divider(),
+              const Divider(),
               RadioListTile<int>(
                   value: 1,
-                  groupValue: gender,
+                  groupValue: Preferences.gender,
                   title: const Text('Masculino'),
                   onChanged: (value) {
-                    gender = value ?? 1;
+                    Preferences.gender = value ?? 1;
                     setState(() {});
                   }),
-              Divider(),
+              const Divider(),
               RadioListTile<int>(
                   value: 2,
-                  groupValue: gender,
+                  groupValue: Preferences.gender,
                   title: const Text('Femenino'),
                   onChanged: (value) {
-                    gender = value ?? 2;
+                    Preferences.gender = value ?? 2;
                     setState(() {});
                   }),
               const Divider(),
               Padding(
                 padding: const EdgeInsets.symmetric( horizontal: 20 ),
                 child: TextFormField(
-                  initialValue: 'Nacho',
+                  initialValue: Preferences.name,
                   onChanged: ( value ){
-                    name = value;
+                    Preferences.name = value;
                     setState(() {});
                   },
                   decoration: const InputDecoration(
